@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>bank-recon — OAuth callback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 720px;
+      margin: 2.5rem auto;
+      padding: 0 1.25rem;
+      line-height: 1.55;
+    }
+    h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+    p.lead { color: #555; margin-top: 0; }
+    .field { margin: 1.25rem 0; }
+    .label { font-size: 0.85rem; color: #666; margin-bottom: 0.3rem; }
+    .value {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      background: #f3f3f3;
+      padding: 0.75rem 0.9rem;
+      border-radius: 6px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background: #1e1e1e; color: #e6e6e6; }
+      p.lead { color: #aaa; }
+      .label { color: #999; }
+      .value { background: #2a2a2a; }
+    }
+    .copy-hint { font-size: 0.8rem; color: #888; margin-top: 0.4rem; }
+    .missing { color: #b00020; }
+    button {
+      font: inherit;
+      padding: 0.5rem 1rem;
+      border: 1px solid currentColor;
+      background: transparent;
+      color: inherit;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>bank-recon — OAuth callback</h1>
+  <p class="lead">
+    Your bank redirected you here after sign-in. Copy the full URL below back into the
+    <code>authorize.py</code> prompt running on your machine.
+  </p>
+
+  <div class="field">
+    <div class="label">Full redirected URL (paste this back)</div>
+    <div class="value" id="full-url"></div>
+    <button id="copy-btn" type="button">Copy full URL</button>
+    <div class="copy-hint" id="copy-hint" aria-live="polite"></div>
+  </div>
+
+  <div class="field">
+    <div class="label"><code>code</code></div>
+    <div class="value" id="code"></div>
+  </div>
+
+  <div class="field">
+    <div class="label"><code>state</code></div>
+    <div class="value" id="state"></div>
+  </div>
+
+  <p class="lead" style="margin-top:2rem">
+    Nothing on this page is sent anywhere. The values above live only in your browser tab.
+  </p>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      const state = params.get("state");
+      const full = window.location.href;
+
+      const fullEl = document.getElementById("full-url");
+      const codeEl = document.getElementById("code");
+      const stateEl = document.getElementById("state");
+
+      fullEl.textContent = full;
+      if (code) {
+        codeEl.textContent = code;
+      } else {
+        codeEl.textContent = "(missing)";
+        codeEl.classList.add("missing");
+      }
+      if (state) {
+        stateEl.textContent = state;
+      } else {
+        stateEl.textContent = "(missing)";
+        stateEl.classList.add("missing");
+      }
+
+      const btn = document.getElementById("copy-btn");
+      const hint = document.getElementById("copy-hint");
+      btn.addEventListener("click", async function () {
+        try {
+          await navigator.clipboard.writeText(full);
+          hint.textContent = "Copied. Paste it back into the script.";
+        } catch (e) {
+          hint.textContent = "Could not copy automatically — select and copy manually.";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
