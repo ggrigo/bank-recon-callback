@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>bank-recon — Intuit OAuth callback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 640px;
+      margin: 2.5rem auto;
+      padding: 0 1.25rem;
+      line-height: 1.55;
+    }
+    h1 { font-size: 1.4rem; margin: 0 0 0.25rem; }
+    p.lead { color: #555; margin-top: 0; }
+    .field { margin: 1.25rem 0; }
+    .label { font-size: 0.85rem; color: #666; margin-bottom: 0.3rem; }
+    .value {
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      background: #f3f3f3;
+      padding: 0.75rem 0.9rem;
+      border-radius: 6px;
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+    a.manual {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font: inherit;
+      padding: 0.5rem 1rem;
+      border: 1px solid currentColor;
+      border-radius: 6px;
+      color: inherit;
+      text-decoration: none;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background: #1e1e1e; color: #e6e6e6; }
+      p.lead { color: #aaa; }
+      .label { color: #999; }
+      .value { background: #2a2a2a; }
+    }
+    .missing { color: #b00020; }
+  </style>
+</head>
+<body>
+  <h1>Forwarding to local listener…</h1>
+  <p class="lead">
+    Intuit redirected you here after consent. This page hands the authorization
+    code off to <code>authorize.py</code> running on your machine.
+    Nothing is sent anywhere else — the forward happens entirely in your browser.
+  </p>
+
+  <div class="field">
+    <div class="label">If this page sits here for more than a couple seconds, click:</div>
+    <a id="manual-link" class="manual" href="#">Continue to local listener</a>
+  </div>
+
+  <div class="field">
+    <div class="label"><code>code</code></div>
+    <div class="value" id="code"></div>
+  </div>
+
+  <div class="field">
+    <div class="label"><code>realmId</code></div>
+    <div class="value" id="realm"></div>
+  </div>
+
+  <div class="field">
+    <div class="label"><code>state</code></div>
+    <div class="value" id="state"></div>
+  </div>
+
+  <script>
+    (function () {
+      var search = window.location.search || "";
+      var params = new URLSearchParams(search);
+      var target = "http://localhost:8765/callback" + search;
+
+      var setField = function (id, val) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        if (val) {
+          el.textContent = val;
+        } else {
+          el.textContent = "(missing)";
+          el.classList.add("missing");
+        }
+      };
+      setField("code",  params.get("code"));
+      setField("realm", params.get("realmId"));
+      setField("state", params.get("state"));
+
+      var manual = document.getElementById("manual-link");
+      manual.setAttribute("href", target);
+
+      // Auto-forward. Browsers allow HTTPS → http://localhost (localhost is a
+      // "potentially trustworthy" origin per the Secure Contexts spec).
+      window.location.replace(target);
+    })();
+  </script>
+</body>
+</html>
