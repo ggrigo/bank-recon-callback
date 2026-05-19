@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>bank-recon — Privacy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+           max-width: 720px; margin: 2.5rem auto; padding: 0 1.25rem; line-height: 1.6; }
+    h1 { font-size: 1.4rem; margin: 0 0 1rem; }
+    h2 { font-size: 1.05rem; margin-top: 1.75rem; }
+    p { margin: 0.6rem 0; }
+    code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.9em; }
+    @media (prefers-color-scheme: dark) { body { background:#1e1e1e; color:#e6e6e6; } }
+  </style>
+</head>
+<body>
+  <h1>bank-recon — Privacy notice</h1>
+
+  <p>
+    This page is the OAuth redirect target of <em>bank-recon</em>, a personal Account
+    Information Service (AIS) integration owned and operated by the application owner
+    (Georgios Grigoriadis) for the sole purpose of consolidating that owner's own SME
+    bank accounts. The application is not offered as a service to anyone else.
+  </p>
+
+  <h2>What data is processed</h2>
+  <p>
+    Bank account balances and transaction history are retrieved by the
+    application owner's local machine from Account Servicing Payment Service Providers
+    (banks) via the Enable Banking API, under explicit PSD2 consent given by the
+    same individual whose accounts they are.
+  </p>
+
+  <h2>Where data goes</h2>
+  <p>
+    All retrieved data is written to local files on the application owner's own
+    computer. No data is transmitted to any third party, no analytics or telemetry
+    of any kind are collected, no remote logs are maintained, and the callback page
+    you are reading runs entirely client-side without server logging.
+  </p>
+
+  <h2>What this callback page does</h2>
+  <p>
+    When your bank redirects you back from PSD2 SCA, the URL carries
+    <code>code</code> and <code>state</code> query parameters. This page reads them
+    via JavaScript, renders them so you can copy the URL into the local script
+    running on your machine, and does nothing else. Those values do not leave your
+    browser tab.
+  </p>
+
+  <h2>Retention</h2>
+  <p>
+    The application owner is the data controller, processor, and sole data subject.
+    Local snapshots are retained on the owner's machine as long as they are useful
+    and can be deleted at any time by the owner.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    For any question, contact the application owner:
+    <code>georgios@baresquare.com</code>.
+  </p>
+</body>
+</html>
